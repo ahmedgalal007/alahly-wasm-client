@@ -452,3 +452,8 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/src/Host/wwwroot/Files/Documents
+/src/Host/wwwroot/Files/Downloads
+/src/Host/wwwroot/Files/Music
+/src/Host/wwwroot/Files/Pictures
+/src/Host/wwwroot/Files/Videos
