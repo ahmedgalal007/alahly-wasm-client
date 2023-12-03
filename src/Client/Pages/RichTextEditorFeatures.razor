@@ -1,0 +1,64 @@
+﻿@page "/richtexteditor-features"
+@using Syncfusion.Blazor.RichTextEditor
+@using System.ComponentModel.DataAnnotations;
+<PageTitle>Rich Text Editor</PageTitle>
+<h2>Rich Text Editor</h2>
+<br/>
+<div id = "ControlRegion">
+  <div class="control-section">
+    <div class="content-wrapper">
+        <div id='content' class='box-form' style="margin: 0 auto; max-width:750px; padding:25px">
+            <EditForm Model="@Model">
+                <DataAnnotationsValidator />
+                <SfRichTextEditor ShowCharCount="true" EnableResize="true"  @bind-Value="@Model.Description" MaxLength="100" Placeholder="Type something...">
+                </SfRichTextEditor>
+                <ValidationMessage For="@(() => Model.Description)" />
+                <br/>
+                <div style="text-align: center">
+                    <button id="validateSubmit" class="samplebtn e-control e-btn" type="submit" data-ripple="true">Submit</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+                     </div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Rich Text Editor Samples - Form Validation</li>
+      <li class="list"> Enable Resize</li>
+      <li class="list"> Show Characters Count</li>
+      <li class="list"> Theme - Material</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .box-form {
+        webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    }
+	.e-richtexteditor {
+        max-width: 720px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 350px;
+    }
+</style>
+@code {
+    public class FormModel
+    {
+        [Required]
+        [MinLength(20, ErrorMessage = "Please enter at least 20 characters.")]
+        public string Description { get; set; }
+    }
+    public FormModel Model = new FormModel();
+}

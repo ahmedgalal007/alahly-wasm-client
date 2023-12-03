@@ -18,7 +18,7 @@ app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
-
+    app.UseCors();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
