@@ -1,0 +1,30 @@
+﻿@page "/article/news"
+
+@using FSH.BlazorWebAssembly.Client.Components.HtmlEditor;
+@using System.ComponentModel.DataAnnotations;
+<h3>News</h3>
+
+
+
+<EditForm Model="@Model">
+    <DataAnnotationsValidator />
+    <HtmlEditor HtmlValue="@Model.Body" Title="HTML Body">
+
+    </HtmlEditor>
+    <ValidationMessage For="@(() => Model.Body)" />
+    <br />
+    <div style="text-align: center">
+        <button id="validateSubmit" class="samplebtn e-control e-btn" type="submit" data-ripple="true">Submit</button>
+    </div>
+</EditForm>
+@code {
+
+    public class FormModel
+    {
+        // [Required]
+        // [MinLength(20, ErrorMessage = "Please enter at least 20 characters.")]
+        public string Body { get; set; } = "Test Html Editor From Page";
+    }
+    public FormModel Model = new FormModel();
+
+}

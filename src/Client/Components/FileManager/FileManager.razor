@@ -1,0 +1,28 @@
+﻿<h3>FileManager</h3>
+
+@using Syncfusion.Blazor.FileManager;
+@inject IJSRuntime JsRuntime;
+
+<SfFileManager TValue="FileManagerDirectoryContent" AllowDragAndDrop="true" AllowMultiSelection="true" ShowFileExtension="false">
+    <FileManagerAjaxSettings Url="https://ej2-aspcore-service.azurewebsites.net/api/FileManager/FileOperations"
+                             UploadUrl="https://ej2-aspcore-service.azurewebsites.net/api/FileManager/Upload"
+                             DownloadUrl="https://ej2-aspcore-service.azurewebsites.net/api/FileManager/Download"
+                             GetImageUrl="https://ej2-aspcore-service.azurewebsites.net/api/FileManager/GetImage">
+    </FileManagerAjaxSettings>
+    <FileManagerToolbarSettings ToolbarItems="@Items"></FileManagerToolbarSettings>
+    <FileManagerContextMenuSettings Layout="@LayoutItems" Visible="true"></FileManagerContextMenuSettings>
+    <FileManagerDetailsViewSettings>
+        <FileManagerColumns>
+            <FileManagerColumn Field="Name" HeaderText="Name"></FileManagerColumn>
+            <FileManagerColumn Field="DateModified" Format="MM/dd/yyyy h:mm tt" HeaderText="Modified"></FileManagerColumn>
+            <FileManagerColumn Field="Size" HeaderText="Size"></FileManagerColumn>
+        </FileManagerColumns>
+    </FileManagerDetailsViewSettings>
+</SfFileManager>
+
+
+@code {
+    List<ToolBarItemModel> Items = new List<ToolBarItemModel>();
+
+    string[] LayoutItems = new string[] { "save" };
+}

@@ -1,0 +1,45 @@
+﻿@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.RichTextEditor
+@using System.ComponentModel.DataAnnotations
+
+@inject IStringLocalizer<SharedResource> L
+
+<h3>@Title</h3>
+
+<div id="ControlRegion">
+    <div class="control-section">
+        <div class="content-wrapper">
+            <div id='content' class='box-form' style="margin: 0 auto; max-width:750px; padding:25px">
+                <SfRichTextEditor @ref="rteObj" ShowCharCount="true" EnableResize="true" @bind-Value="@HtmlValue" MaxLength="100" Placeholder="Type something...">
+                    <RichTextEditorToolbarSettings Items="@Tools">
+                        <RichTextEditorCustomToolbarItems>
+                            <RichTextEditorCustomToolbarItem Name="Symbol">
+                                <Template>
+                                    @* <button class="e-btn e-tbar-btn" >
+                                    <div class="e-tbar-btn-text" style="font-weight: 500;">🙂</div>
+                                    </button> *@
+                                    <MudButton DisableElevation @onclick="ClickHandler" Variant="Variant.Filled" StartIcon="@Icons.Filled.Camera">
+                                         @L["Iibrary"]
+                                     </MudButton>
+                                 </Template>
+                             </RichTextEditorCustomToolbarItem>
+                         </RichTextEditorCustomToolbarItems>
+                     </RichTextEditorToolbarSettings>
+                 </SfRichTextEditor>
+                 <ValidationMessage For="@(() => HtmlValue)" />
+             </div>
+
+             @HtmlValue
+         </div>
+     </div>
+
+
+     <SfDialog @bind-Visible="@dialogVisible" ZIndex="1000" ShowCloseIcon="false" IsModal="true" Width="45%" Target="#rteSection">
+         <DialogTemplates>
+             <Header> Insert Emoticons </Header>
+             <Content></Content>
+         </DialogTemplates>
+     </SfDialog>
+ </div>

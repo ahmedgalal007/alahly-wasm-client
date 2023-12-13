@@ -15,12 +15,12 @@
         <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
         <PackageReference Include="MudBlazor" Version="6.0.10" />
-        <PackageReference Include="Syncfusion.Blazor.ImageEditor" Version="23.1.36"/>
-        <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="23.1.36"/>
-        <PackageReference Include="Syncfusion.Blazor.FileManager" Version="23.1.36"/>
-        <PackageReference Include="Syncfusion.Blazor.Navigations" Version="23.1.36"/>
-        <PackageReference Include="Syncfusion.Blazor.Themes" Version="23.1.36"/>
-        <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="23.1.36"/>
+        <PackageReference Include="Syncfusion.Blazor.ImageEditor" Version="23.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="23.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.FileManager" Version="23.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.Navigations" Version="23.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.Themes" Version="23.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="23.1.36" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,14 +41,14 @@
   
     <ItemGroup>
       <Compile Update="Resources\SfResources.Designer.cs">
-        <DesignTime>True</DesignTime >
-        <AutoGen>True</AutoGen >
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
         <DependentUpon>SfResources.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update ="Resources\SfResources.resx">
+      <EmbeddedResource Update="Resources\SfResources.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>SfResources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
