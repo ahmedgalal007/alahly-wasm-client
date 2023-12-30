@@ -52,6 +52,12 @@
                     @L["News"]
                 </MudNavLink>
             }
+            @if (_canViewNews)
+            {
+                <MudNavLink Href="/filemanager-features" Icon="@Icons.Filled.Folder" Class="fsh-nav-child">
+                    @L["File Manager"]
+                </MudNavLink>
+            }
         </MudNavGroup>
      }
      @if (CanViewAdministrationGroup)

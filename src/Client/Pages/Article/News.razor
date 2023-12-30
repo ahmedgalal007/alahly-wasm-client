@@ -1,4 +1,7 @@
 ﻿@page "/article/news"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.News)]
+
+@inject IStringLocalizer<Brands> L
 
 @using FSH.BlazorWebAssembly.Client.Components.HtmlEditor;
 @using System.ComponentModel.DataAnnotations;
@@ -11,6 +14,7 @@
     <HtmlEditor HtmlValue="@Model.Body" Title="HTML Body">
 
     </HtmlEditor>
+    <input type="text" value="@Model.Body" />
     <ValidationMessage For="@(() => Model.Body)" />
     <br />
     <div style="text-align: center">
@@ -26,5 +30,27 @@
         public string Body { get; set; } = "Test Html Editor From Page";
     }
     public FormModel Model = new FormModel();
+
+    protected EntityServerTableContext<NewsDto, Guid, UpdateBrandRequest> Context { get; set; } = default!;
+
+     protected override void OnInitialized() =>
+        Context = new(
+            entityName: L["News"],
+            entityNamePlural: L["News"],
+            entityResource: FSHResource.News,
+            fields: new()
+            {
+                new(brand => brand.Id, L["Id"], "Id"),
+                new(brand => brand.Name, L["Name"], "Name"),
+                new(brand => brand.Description, L["Description"], "Description"),
+            },
+            idFunc: brand => brand.Id,
+            searchFunc: async filter => (await NewsClient
+                .SearchAsync(filter.Adapt<SearchNewsRequest>()))
+                .Adapt<PaginationResponse<BrandDto>>(),
+            createFunc: async brand => await BrandsClient.CreateAsync(brand.Adapt<CreateBrandRequest>()),
+            updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, brand),
+            deleteFunc: async id => await BrandsClient.DeleteAsync(id),
+            exportAction: string.Empty);
 
 }
