@@ -56,7 +56,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient2",
+      "namespace": "FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
