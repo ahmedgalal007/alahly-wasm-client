@@ -6,16 +6,18 @@
 @using FSH.BlazorWebAssembly.Client.Components.HtmlEditor;
 @using System.ComponentModel.DataAnnotations;
 
-
 <FshTitle Title="@L["News"]" Description="@L["Manage News."]" />
 
-<EntityTable @ref="_newsTable" TEntity="NewsDto" TId="Guid" TRequest="UpdateNewsRequest" Context="@Context">
+<EntityTable @ref="_newsTable" TEntity="NewsDto" TId="Guid" TRequest="NewsViewModel" Context="@Context">
     <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
             <MudItem xs="12" md="6">
                 <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"News Id"]" />
              </MudItem>
+        } else
+        {
+            <MudHidden For="@(() => context.CultureCode)" @bind-Value="context.CultureCode" />
         }
         <MudItem xs="12" md="6">
             <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
