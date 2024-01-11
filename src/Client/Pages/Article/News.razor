@@ -10,22 +10,9 @@
 
 <EntityTable @ref="_newsTable" TEntity="NewsDto" TId="Guid" TRequest="NewsViewModel" Context="@Context">
     <EditFormContent>
-        @if (!Context.AddEditModal.IsCreate)
-        {
-            <MudItem xs="12" md="6">
-                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"News Id"]" />
-             </MudItem>
-        } else
-        {
-            <MudHidden For="@(() => context.CultureCode)" @bind-Value="context.CultureCode" />
-        }
-        <MudItem xs="12" md="6">
-            <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
-        </MudItem>
-        <MudItem xs="12" md="6">
-            <MudTextField For="@(() => context.Description)" @bind-Value="context.Description"
-                          Label="@L["Description"]" />
-        </MudItem>
+        <FSH.BlazorWebAssembly.Client.Components.Article.News.NewsEditForm Context="@context" IsCreate="@Context.AddEditModal.IsCreate">
+
+       </FSH.BlazorWebAssembly.Client.Components.Article.News.NewsEditForm>
     </EditFormContent>
 
 </EntityTable>

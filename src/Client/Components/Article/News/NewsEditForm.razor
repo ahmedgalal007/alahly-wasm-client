@@ -1,0 +1,160 @@
+﻿@using FSH.BlazorWebAssembly.Client.Components.EntityTable
+@using FSH.BlazorWebAssembly.Client.Components.Common
+@using FSH.BlazorWebAssembly.Client.Pages.Article
+@using System.ComponentModel;
+@using System.Globalization;
+
+@inject FSH.BlazorWebAssembly.Client.Infrastructure.Preferences.IClientPreferenceManager clientPref
+
+@attribute [MustHavePermission(FSHAction.View, FSHResource.News)]
+
+@inject IStringLocalizer<Brands> L
+
+@namespace FSH.BlazorWebAssembly.Client.Components.Article.News
+
+<MudContainer>
+    
+    <MudTabs Elevation="4" Rounded="true" AlwaysShowScrollButtons="true" Color="@Color.Warning" @ref="tabs" Class="mt-4">
+        <MudTabPanel Text="One">
+            <ChildContent>
+                <MudText>Both custom tab and wrapper content 01</MudText>
+                @* <MudAutocomplete T="string"
+                                 @bind-Value="value1"
+                                 SearchFunc="SearchFunc"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" /> *@
+                <MultiSelectAutoComplete T="string"
+                             @bind-Values="SelectedValues"
+                             @bind-Values:event="setSelectedValues"
+                             GetIDFunc="e => e.Count()"
+                             GetNameFunc="e => e"
+                                         SearchFunc="SearchFunc"  />
+            </ChildContent>
+            <TabWrapperContent>
+                <MudTooltip Text="ToolTip One">
+                    @context
+                </MudTooltip>
+            </TabWrapperContent>
+            <TabContent>
+                <MudText Typo="Typo.h6">Item One</MudText>
+            </TabContent>
+        </MudTabPanel>
+        <MudTabPanel Text="Two">
+            <ChildContent>
+                <MudText>Both custom tab and wrapper content 02</MudText>
+            </ChildContent>
+            <TabWrapperContent>
+                <MudTooltip Text="ToolTip Two">
+                    @context
+                </MudTooltip>
+            </TabWrapperContent>
+            <TabContent>
+                <MudText Typo="Typo.h6">Item Two</MudText>
+            </TabContent>
+        </MudTabPanel>
+        <MudTabPanel Text="Three" />
+        <MudTabPanel Text="Four" />
+        <MudTabPanel Text="Five" />
+        <MudTabPanel Text="Six" />
+        <MudTabPanel Text="Seven" />
+    </MudTabs>
+</MudContainer>
+    @if (!IsCreate)
+{
+    <MudItem xs="12" md="6">
+        <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"News Id"]" />
+     </MudItem>
+}
+else
+{
+    <MudHidden For="@(() => context.CultureCode)" @bind-Value="context.CultureCode" />
+}
+<MudItem xs="12" md="6">
+    <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
+</MudItem>
+<MudItem xs="12" md="6">
+    <MudTextField For="@(() => context.Description)" @bind-Value="context.Description"
+                  Label="@L["Description"]" />
+</MudItem>
+
+@code {
+    [Parameter]
+    public NewsViewModel context { get; set; } = default;
+    [Parameter]
+    public bool IsCreate { get; set; }
+
+    MudTabs tabs;
+    private string value1, value2;
+    // IEnumerable<Keyword> Data = new List<Keyword>(){
+    //     new Keyword{ID=1, Name="Ahmed" },
+    //     new Keyword{ID=2, Name="Ali" },
+    //     new Keyword { ID = 3, Name = "Mohammed" }
+    // };
+
+    IEnumerable<string> Data { get; set; } = new List<string>() { "Ahmed", "Ali", "Mohammed" };
+
+    [TypeConverter(typeof(IListStringConverter))]
+    private IEnumerable<string> SelectedValues;
+    public async Task setSelectedValues(IEnumerable<string> value) =>
+        // await Task.Delay(5);
+        this.SelectedValues = value;
+
+
+
+    private async Task SelectedItemsChanged()
+    {
+        // return new List<Keyword>();
+    }
+
+    private async  Task<IEnumerable<string>> SearchFunc(string value) {
+        await Task.Delay(5);
+        if (string.IsNullOrEmpty(value))
+            return Data;
+        return Data.Where(e => e.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+
+    [TypeConverter(typeof(IListStringConverter))]
+    public class Keyword
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+
+        public override String ToString() => this.Name;
+    }
+
+    [TypeConverter(typeof(IListStringConverter))]
+    public class IListStringConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return destinationType == typeof(string);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value is string strValue)
+            {
+                string[] stringArray = strValue.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                return new List<string>(stringArray);
+            }
+
+            throw new NotSupportedException($"Cannot convert '{value}' to {typeof(IList<string>)}");
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (value is IList<string> stringList)
+            {
+                return string.Join(",", stringList);
+            }
+
+            throw new NotSupportedException($"Cannot convert {typeof(IList<string>)} to '{destinationType}'");
+        }
+    }
+}
+

@@ -80,8 +80,17 @@ public partial class News
                 news.CultureCode = await getCurrentLanguage();
                 var req = news.Adapt<CreateNewsRequest>();
                 await NewsClient.CreateAsync(req);
+                news.ImageInBytes = string.Empty;
             },
-            updateFunc: async (id, news) => await NewsClient.UpdateAsync(id, news.Adapt<UpdateNewsRequest>()),
+            updateFunc: async (id, news) => {
+                if (!string.IsNullOrEmpty(news.ImageInBytes))
+                {
+                    news.DeleteCurrentImage = true;
+                    news.MainImage = new FileUploadRequest() { Data = news.ImageInBytes, Extension = news.ImageExtension ?? string.Empty, Name = $"{news.Title}_{Guid.NewGuid():N}" };
+                }
+                await NewsClient.UpdateAsync(id, news.Adapt<UpdateNewsRequest>());
+                news.ImageInBytes = string.Empty;
+            },
             deleteFunc: async id => await NewsClient.DeleteAsync(id),
             exportAction: string.Empty);
     }
