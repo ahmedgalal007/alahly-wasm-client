@@ -129,7 +129,6 @@ public class FormModel
     public string Body { get; set; } = "Test Html Editor From Page";
 }
 
-
 public class NewsViewModel : UpdateNewsRequest
 {
     public string? ImagePath { get; set; }

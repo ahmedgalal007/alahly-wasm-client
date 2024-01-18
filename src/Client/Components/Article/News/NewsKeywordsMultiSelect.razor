@@ -1,0 +1,46 @@
+﻿<MultiSelectAutoComplete TItem="@Keyword"
+                         @bind-Values="SelectedValues"
+                         GetIDFunc="e => e.ID"
+                         GetNameFunc="e => e.Name"
+                         SearchFunc="SearchFunc" />
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SelectedValues = this.Data.Where(e => e.ID == 1);
+        StateHasChanged();
+    }
+    // private string value1, value2;
+    IEnumerable<Keyword> Data = new List<Keyword>(){
+        new Keyword{ID=1, Name="Ahmed" },
+        new Keyword{ID=2, Name="Ali" },
+        new Keyword { ID = 3, Name = "Mohammed" }
+    };
+
+    // IEnumerable<string> Data { get; set; } = new List<string>() { "Ahmed", "Ali", "Mohammed" };
+
+    private IEnumerable<Keyword> SelectedValues { get; set; }
+    // public async Task setSelectedValues(IEnumerable<Keyword> value) => SelectedValues = value;
+
+    private async Task OnSelectedKeywordsChanged(IEnumerable<Keyword> value)
+    {
+        await Task.Delay(5);
+        SelectedValues = value;
+    }
+
+    private async Task<IEnumerable<Keyword>> SearchFunc(string value)
+    {
+        await Task.Delay(5);
+        if (string.IsNullOrEmpty(value))
+            return Data.Except(SelectedValues);
+        return Data.Where(e => e.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Except(SelectedValues);
+    }
+
+
+    public class Keyword
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}

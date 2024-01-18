@@ -7,7 +7,7 @@
     <MudAutocomplete T="TItem" @bind-Value="theValue" SearchFunc="FilteredSearchFunc"
                      ShowProgressIndicator="true" DebounceInterval="600"
                      Label="@Label" Clearable="true" Immediate="false"
-                     Variant="Variant.Outlined" CoerceValue="true"
+                     Variant="MudThemeManager.MudVariant" CoerceValue="true"
                      ToStringFunc="GetNameFunc">
     </MudAutocomplete>
 
@@ -22,16 +22,16 @@
 @code {
     [Parameter]
     public IEnumerable<TItem>? Values { get; set; }
-
+ 
     [Parameter]
     public EventCallback<IEnumerable<TItem>> ValuesChanged { get; set; }
-
+ 
     [Parameter]
     public string Label { get; set; }
-
+ 
     [Parameter, EditorRequired]
     public Func<string, Task<IEnumerable<TItem>>> SearchFunc { get; set; }
-
+ 
     [Parameter, EditorRequired]
     public Func<TItem, string> GetNameFunc { get; set; }
 
@@ -55,11 +55,11 @@
     {
         base.OnParametersSet();
 
-        if (Values == null)
+        if (Values == null )
         {
             selectedValues.Clear();
         }
-        else if (!Values.SequenceEqual(selectedValues))
+        else if( ! Values.SequenceEqual( selectedValues ))
         {
             selectedValues = Values.ToHashSet();
             ValuesChanged.InvokeAsync(Values);
@@ -72,7 +72,7 @@
         ValuesChanged.InvokeAsync(Values);
         StateHasChanged();
     }
-
+ 
     private void RemoveValue(MudChip chip)
     {
         if (selectedValues.RemoveWhere(x => GetNameFunc(x) == chip.Text) > 0)
