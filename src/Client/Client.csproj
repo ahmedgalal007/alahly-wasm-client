@@ -18,7 +18,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.5" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-        <PackageReference Include="MudBlazor" Version="6.0.10" />
+        <PackageReference Include="MudBlazor" Version="6.11.1" />
         <PackageReference Include="Syncfusion.Blazor.ImageEditor" Version="23.1.36" />
         <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="23.1.36" />
         <PackageReference Include="Syncfusion.Blazor.FileManager" Version="23.1.36" />
