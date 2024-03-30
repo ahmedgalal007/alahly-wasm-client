@@ -27,6 +27,7 @@ public static class FSHResource
     public const string Products = nameof(Products);
     public const string Brands = nameof(Brands);
     public const string Categories = nameof(Categories);
+    public const string Keywords = nameof(Keywords);
     public const string News = nameof(News);
 }
 
@@ -80,6 +81,11 @@ public static class FSHPermissions
         new("Delete Categories", FSHAction.Delete, FSHResource.Categories),
         new("Generate Categories", FSHAction.Generate, FSHResource.Categories),
         new("Clean Categories", FSHAction.Clean, FSHResource.Categories),
+        new("View Keywords", FSHAction.View, FSHResource.Keywords, IsBasic: true),
+        new("Search Keywords", FSHAction.Search, FSHResource.Keywords, IsBasic: true),
+        new("Create Keywords", FSHAction.Create, FSHResource.Keywords),
+        new("Update Keywords", FSHAction.Update, FSHResource.Keywords),
+        new("Delete Keywords", FSHAction.Delete, FSHResource.Keywords),
     };
 
     public static IReadOnlyList<FSHPermission> All { get; } = new ReadOnlyCollection<FSHPermission>(_all);

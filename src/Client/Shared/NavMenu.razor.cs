@@ -23,6 +23,7 @@ public partial class NavMenu
     private bool _canViewBrands;
     private bool _canViewTenants;
     private bool _canViewCategories;
+    private bool _canViewKeywords;
     private bool _canViewNews;
     private bool CanViewAdministrationGroup => _canViewUsers || _canViewRoles || _canViewTenants;
 
@@ -38,6 +39,7 @@ public partial class NavMenu
         _canViewBrands = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Brands);
         _canViewTenants = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Tenants);
         _canViewCategories = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Categories);
+        _canViewKeywords = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Keywords);
         _canViewNews = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.News);
     }
 }

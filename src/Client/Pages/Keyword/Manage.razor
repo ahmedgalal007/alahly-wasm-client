@@ -1,10 +1,10 @@
-﻿@page "/KeyWord/Manage"
-@attribute [MustHavePermission(FSHAction.View, FSHResource.Brands)]
+﻿@page "/keyword/manage"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Keywords)]
 
 @inject IStringLocalizer<Brands> L
 @inject IBrandsClient BrandsClient
 
-<FshTitle Title="@L["Brands"]" Description="@L["Manage Brands."]" />
+<FshTitle Title="@L["Keywords"]" Description="@L["Manage Keywords."]" />
 
 <EntityTable TEntity="BrandDto" TId="Guid" TRequest="UpdateBrandRequest" Context="@Context">
 
@@ -32,8 +32,8 @@
 
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["Brand"],
-            entityNamePlural: L["Brands"],
+            entityName: L["Keyword"],
+            entityNamePlural: L["Keywords"],
             entityResource: FSHResource.Brands,
             fields: new()
             {
