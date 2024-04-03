@@ -1,52 +1,130 @@
 ﻿@page "/keyword/manage"
+@using System.Collections.ObjectModel;
 @attribute [MustHavePermission(FSHAction.View, FSHResource.Keywords)]
 
 @inject IStringLocalizer<Brands> L
 @inject IBrandsClient BrandsClient
+@inject IKeywordClient KeywordClient
 
 <FshTitle Title="@L["Keywords"]" Description="@L["Manage Keywords."]" />
 
-<EntityTable TEntity="BrandDto" TId="Guid" TRequest="UpdateBrandRequest" Context="@Context">
+<EntityTable TEntity="KeywordDto" TId="Guid" TRequest="UpdateKeywordRequest" Context="@Context">
 
-    <EditFormContent>
+    <EditFormContent >
         @if (!Context.AddEditModal.IsCreate)
         {
             <MudItem xs="12" md="6">
-                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Brand Id"]" />
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Keyword Id"]" />
             </MudItem>
         }
-        <MudItem xs="12" md="6">
-            <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
+        @* <MudItem xs="12" md="6">
+            <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
         </MudItem>
-        <MudItem xs="12" md="6">
-            <MudTextField For="@(() => context.Description)" @bind-Value="context.Description"
-                Label="@L["Description"]" />
-        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudHidden For="@(() => context.DefaultCultureCode)" @bind-Value="CurrentLanguage"></MudHidden>
+        </MudItem> *@
+        
+        
+        @* @for (int i = 0; i < ActiveTranslations.Count -1; i++) *@
+        @foreach (var item in ActiveTranslations)
+        {
+            <MudItem xs="12" md="12">
+                <MudCheckBox @bind-Checked="@item.Active" @onblur="ForceRender" @onchange="ForceRender">@item.Name</MudCheckBox>
+            </MudItem> 
+        }
+        <br/>
+        @* @for (int i = 0; i < ActiveTranslations.Count() -1; i++) *@
+        @foreach (var translation in ActiveTranslations)
+        {
+            <MudItem xs="12" md="4">
+            <MudText>@translation.Active</MudText>
+            </MudItem>
+        }
     </EditFormContent>
 
 </EntityTable>
 
 @code
 {
-    protected EntityServerTableContext<BrandDto, Guid, UpdateBrandRequest> Context { get; set; } = default!;
+    protected EntityServerTableContext<KeywordDto, Guid, UpdateKeywordRequest> Context { get; set; } = default!;
 
-    protected override void OnInitialized() =>
+    protected override void OnInitialized()
+    {
         Context = new(
             entityName: L["Keyword"],
             entityNamePlural: L["Keywords"],
-            entityResource: FSHResource.Brands,
+            entityResource: FSHResource.Keywords,
             fields: new()
-            {
-                new(brand => brand.Id, L["Id"], "Id"),
-                new(brand => brand.Name, L["Name"], "Name"),
-                new(brand => brand.Description, L["Description"], "Description"),
-            },
-            idFunc: brand => brand.Id,
-            searchFunc: async filter => (await BrandsClient
-                .SearchAsync(filter.Adapt<SearchBrandsRequest>()))
-                .Adapt<PaginationResponse<BrandDto>>(),
-            createFunc: async brand => await BrandsClient.CreateAsync(brand.Adapt<CreateBrandRequest>()),
-            updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, brand),
-            deleteFunc: async id => await BrandsClient.DeleteAsync(id),
+                {
+                new(keyword => keyword.Id, L["Id"], "Id"),
+                new(keyword => keyword.IsOrganization, L["Organization"], "Organization"),
+                },
+            idFunc: keyword => keyword.Id ?? Guid.NewGuid(),
+            searchFunc: async filter => (await KeywordClient
+                .SearchAsync(filter.Adapt<SearchKeywordRequest>()))
+                .Adapt<PaginationResponse<KeywordDto>>(),
+            createFunc: async keyword => await KeywordClient.CreateAsync(keyword.Adapt<CreateKeywordRequest>()),
+            updateFunc: async (id, keyword) => await KeywordClient.UpdateAsync(id, keyword),
+            deleteFunc: async id => await KeywordClient.DeleteAsync(id),
             exportAction: string.Empty);
+
+
+
+        foreach (var language in LocalizationConstants.SupportedLanguages)
+        {
+            // if (language.Code == CurrentLanguage)
+            // {
+            // context.DefaultCultureCode = CurrentLanguage;
+            // }
+            // if (!ActiveTranslations.Any(e => e.Code == language.Code))
+            // {
+            ActiveTranslations.Add(new() { Name = language.DisplayName, Code = language.Code, Active = language.Code == CurrentLanguage });
+            // }
+        }
+
+    }
+
+
+
+    public string? CurrentLanguage { get; set; } = "ar-EG";
+    // [Parameter] public Dictionary<string, bool> ActiveTranslations { get; set; } = new Dictionary<string, bool>();
+    public List<LanguageItem> ActiveTranslations { get; set; } = new List<LanguageItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentPreference = await ClientPreferences.GetPreference() as ClientPreference;
+        if (currentPreference != null)
+        {
+            CurrentLanguage = currentPreference.LanguageCode;
+        }
+        else
+        {
+            CurrentLanguage = "ar-EG";
+        }
+
+    }
+
+    private void SwitchLang(string lang)
+    {
+        CurrentLanguage = lang;
+    }
+
+    private void ForceRender(EventArgs e)
+    {
+        Context.AddEditModal.ForceRender();
+    }
+
+    [JSInvokable]
+    private  void ToggleLanguage(ChangeEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+
+    public class LanguageItem
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public bool Active { get; set; }
+    }
 }

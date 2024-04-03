@@ -16,7 +16,7 @@ public static class LocalizationConstants
         //new("sv-SE", "Swedish"),
         //new("id-ID", "Indonesia"),
         //new("it-IT", "Italian"),
-        new("ar", "عربي", true),
+        new("ar-EG", "عربي", true),
         //new("pt-BR", "Portugues")
     };
 }
