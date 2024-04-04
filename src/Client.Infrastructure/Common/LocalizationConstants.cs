@@ -1,13 +1,14 @@
 ﻿namespace FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 
-public record LanguageCode(string Code, string DisplayName, bool IsRTL = false);
+public record LanguageCode(string Code, string DisplayName, int Order=0, bool IsRTL = false);
 
 public static class LocalizationConstants
 {
     public static readonly LanguageCode[] SupportedLanguages =
     {
-        new("en-US", "English"),
-        new("fr-FR", "French"),
+        new("ar-EG", "عربي", 1, true),
+        new("en-US", "English", 2),
+        new("fr-FR", "French", 3),
         //new("km_KH", "Khmer"),
         //new("de-DE", "German"),
         //new("nl-NL", "Dutch - Netherlands"),
@@ -16,7 +17,6 @@ public static class LocalizationConstants
         //new("sv-SE", "Swedish"),
         //new("id-ID", "Indonesia"),
         //new("it-IT", "Italian"),
-        new("ar-EG", "عربي", true),
         //new("pt-BR", "Portugues")
     };
 }
