@@ -8189,13 +8189,16 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         public System.Collections.Generic.ICollection<string>? Languages { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("locals", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<LocalizedKeyword> Locals { get; set; } = default!;
+        public System.Collections.Generic.ICollection<LocalizedKeywordDto> Locals { get; set; } = default!;
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class LocalizedKeyword : AuditableEntity
+    public partial class LocalizedKeywordDto
     {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? Id { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("keywordId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid KeywordId { get; set; } = default!;
 
@@ -8213,54 +8216,6 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
 
         [Newtonsoft.Json.JsonProperty("isDefault", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsDefault { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public abstract partial class AuditableEntity : AuditableEntityOfGuid
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public abstract partial class AuditableEntityOfGuid : BaseEntityOfGuid
-    {
-        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid CreatedBy { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("createdOn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime CreatedOn { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("lastModifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid LastModifiedBy { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("lastModifiedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? LastModifiedOn { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("deletedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? DeletedOn { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("deletedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid? DeletedBy { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public abstract partial class BaseEntityOfGuid
-    {
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid Id { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("domainEvents", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<DomainEvent> DomainEvents { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public abstract partial class DomainEvent
-    {
-        [Newtonsoft.Json.JsonProperty("triggeredOn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime TriggeredOn { get; set; } = default!;
 
     }
 
@@ -8378,8 +8333,87 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("languages", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Languages { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("locals", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<LocalizedKeyword>? Locals { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("locals", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<LocalizedKeyword> Locals { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class LocalizedKeyword : AuditableLocalizedEntity
+    {
+        [Newtonsoft.Json.JsonProperty("keywordId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid KeywordId { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("culturCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CulturCode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Title { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Description { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public abstract partial class AuditableLocalizedEntity : AuditableLocalizedEntityOfGuid
+    {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public abstract partial class AuditableLocalizedEntityOfGuid : AuditableEntityOfGuid
+    {
+        [Newtonsoft.Json.JsonProperty("culturCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CulturCode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("enabled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool Enabled { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("isDefault", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsDefault { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public abstract partial class AuditableEntityOfGuid : BaseEntityOfGuid
+    {
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid CreatedBy { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("createdOn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime CreatedOn { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("lastModifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid LastModifiedBy { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("lastModifiedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? LastModifiedOn { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("deletedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? DeletedOn { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("deletedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? DeletedBy { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public abstract partial class BaseEntityOfGuid
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid Id { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("domainEvents", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<DomainEvent> DomainEvents { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public abstract partial class DomainEvent
+    {
+        [Newtonsoft.Json.JsonProperty("triggeredOn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime TriggeredOn { get; set; } = default!;
 
     }
 

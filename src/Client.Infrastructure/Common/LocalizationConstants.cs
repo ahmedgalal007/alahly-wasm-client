@@ -6,7 +6,7 @@ public static class LocalizationConstants
 {
     public static readonly LanguageCode[] SupportedLanguages =
     {
-        new("ar-EG", "عربي", 1, true),
+        new("ar-EG", "العربية-(مصر)", 1, true),
         new("en-US", "English", 2),
         new("fr-FR", "French", 3),
         //new("km_KH", "Khmer"),

@@ -1,0 +1,51 @@
+﻿@using FSH.WebApi.Shared.Localizations
+@typeparam TItem where TItem : AuditableLocalizedEntity, new()
+
+<MudPaper Class="pa-16 ma-2" Elevation="3">
+    <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary">
+
+        @foreach (var item in LanguageManager.GetList(null))
+        {
+
+            <MudTabPanel Text="@item.Name">
+                <MudItem xs="12" md="3">
+                    @*  <MudCheckBox Checked="@(item.Active? "checked" : "unchecked")" @onblur="ForceRender" @onchange="ForceRender">
+                @item.Name</MudCheckBox> *@
+                </MudItem>
+                @if (Items != null)
+                {
+                    @foreach (var local in Items.Where(e => e.CulturCode == item.Code))
+                    {
+                        @ChildContent(local)
+
+                    }
+                }
+                @if (Items == null)
+                {
+                    <MudText>Locals Is Null ????</MudText>
+                }
+            </MudTabPanel>
+        }
+    </MudTabs>
+</MudPaper>
+
+@code {
+
+    [Parameter] public Guid KeywordId { get; set; }
+    [Parameter] public IEnumerable<TItem> Items { get; set; }
+    [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
+    [Parameter] public EventCallback<TItem>? AddLanguage { get; set; }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Items == null)
+        {
+            var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
+            Items = new List<TItem>()
+            {
+                new TItem { CulturCode = preferenceManager?.LanguageCode ?? "ar-EG", Enabled = true , IsDefault = false }
+            };
+        }
+
+        // return base.OnParametersSetAsync();
+    }
+}

@@ -1,7 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>FSH.WebApi.Shared</RootNamespace>
         <AssemblyName>FSH.WebApi.Shared</AssemblyName>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Update="Roslynator.Analyzers" Version="4.12.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
 </Project>

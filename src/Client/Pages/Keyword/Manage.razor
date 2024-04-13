@@ -4,13 +4,13 @@
 
 @inject IStringLocalizer<Manage> L
 @*@inject IBrandsClient BrandsClient*@
-@inject IKeywordClient KeywordClient
+@* @inject IKeywordClient KeywordClient *@
 
 <FshTitle Title="@L["Keywords"]" Description="@L["Manage Keywords."]" />
 
 <EntityTable TEntity="KeywordDto" TId="Guid" TRequest="UpdateKeywordRequest" Context="@Context">
 
-    <EditFormContent >
+    <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
             <MudItem xs="12" md="6">
@@ -18,43 +18,64 @@
             </MudItem>
         }
         @* <MudItem xs="12" md="6">
-            <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
+        <MudTextField T="string" For="@(() => context.Title)" @bind-Value="context.Title" Label="@L["Title"]" />
         </MudItem>
         <MudItem xs="12" md="12">
-            <MudHidden For="@(() => context.DefaultCultureCode)" @bind-Value="CurrentLanguage"></MudHidden>
+        <MudHidden For="@(() => context.DefaultCultureCode)" @bind-Value="CurrentLanguage"></MudHidden>
         </MudItem> *@
-        
-        
+
+
         @* @for (int i = 0; i < ActiveTranslations.Count -1; i++) *@
         <MudItem xs="12" md="12">
-            <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">@nameof(context.IsOrganization)</MudCheckBox></MudItem>
-            <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">@nameof(context.IsEvent)</MudCheckBox></MudItem>
-            <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">@nameof(context.IsPerson)</MudCheckBox></MudItem>
-            <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">@nameof(context.IsPlace)</MudCheckBox></MudItem>
-            <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">@nameof(context.IsProduct)</MudCheckBox></MudItem>
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
+                    @nameof(context.IsOrganization)
+                </MudCheckBox>
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
+                    @nameof(context.IsEvent)
+                </MudCheckBox>
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
+                    @nameof(context.IsPerson)
+                </MudCheckBox>
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
+                    @nameof(context.IsPlace)
+                </MudCheckBox>
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
+                    @nameof(context.IsProduct)
+                </MudCheckBox>
+            </MudItem>
 
-        <MudPaper Class="pa-16 ma-2" Elevation="3">
-        <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary" >
-            @foreach (var item in ActiveTranslations)
-            {
-                <MudTabPanel Text="@item.Name">
-                     <MudItem xs="12" md="3"><MudCheckBox @bind-Checked="item.Active" @onblur="ForceRender" @onchange="ForceRender">@item.Name</MudCheckBox></MudItem>
-                            @foreach (var local in context.Locals.Where(e => e.CulturCode == item.Code))
-                            {
-                                  <MudItem xs="12" md="6"><MudTextField @bind-Value="local.Title"></MudTextField></MudItem>                
-                                  <MudItem xs="12" md="6"><MudTextField @bind-Value="local.Description"></MudTextField></MudItem>                
-                            }
-                </MudTabPanel>
-            }
-        </MudTabs>
-        </MudPaper>
+            @* <KeywordLocals TItem="AuditableLocalizedEntity" KeywordId="context.Id" Items="context.Locals" Context="local">
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="local.Title"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="local.Description"></MudTextField>
+                </MudItem>
+            </KeywordLocals> *@
+            <KeywordLocals TItem="LocalizedKeyword" KeywordId="context.Id" Items="context.Locals" Context="local">
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="local.Title"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="local.Description"></MudTextField>
+                </MudItem>
+            </KeywordLocals>
         </MudItem>
-        <br/>
+        <br />
         @* @for (int i = 0; i < ActiveTranslations.Count() -1; i++) *@
-        @foreach (var translation in ActiveTranslations)
+        @foreach (var translation in LanguageManager.GetList(null))
         {
             <MudItem xs="12" md="4">
-            <MudText>@translation.Active</MudText>
+                <MudText>@translation.Active</MudText>
             </MudItem>
         }
     </EditFormContent>
@@ -63,88 +84,5 @@
 
 @code
 {
-    protected EntityServerTableContext<KeywordDto, Guid, UpdateKeywordRequest> Context { get; set; } = default!;
 
-    protected override void OnInitialized() => Context = new(
-            entityName: L["Keyword"],
-            entityNamePlural: L["Keywords"],
-            entityResource: FSHResource.Keywords,
-            fields: new()
-                {
-                new(keyword => keyword.Id, L["Id"], "Id"),
-                new(keyword => keyword.IsOrganization, L["Organization"], "Organization"),
-                },
-            idFunc: keyword => keyword.Id ?? Guid.NewGuid(),
-            searchFunc: async filter => (await KeywordClient
-                .SearchAsync(filter.Adapt<SearchKeywordRequest>()))
-                .Adapt<PaginationResponse<KeywordDto>>(),
-            createFunc: async keyword => await KeywordClient.CreateAsync(keyword.Adapt<CreateKeywordRequest>()),
-            updateFunc: async (id, keyword) => await KeywordClient.UpdateAsync(id, keyword),
-            deleteFunc: async id => await KeywordClient.DeleteAsync(id),
-            exportAction: string.Empty);
-
-
-
-    public string CurrentLanguage { get; set; } = "ar-EG";
-    // [Parameter] public Dictionary<string, bool> ActiveTranslations { get; set; } = new Dictionary<string, bool>();
-    public List<LanguageItem> ActiveTranslations { get; set; } = new List<LanguageItem>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        var currentPreference = await ClientPreferences.GetPreference() as ClientPreference;
-
-        CurrentLanguage = currentPreference != null ? currentPreference.LanguageCode : "ar-EG";
-        
-
-        foreach (var language in LocalizationConstants.SupportedLanguages.OrderBy(e => e.Order))
-        {
-            ActiveTranslations.Add(new() { Name = language.DisplayName, Code = language.Code, Active = language.Code == CurrentLanguage });
-        }
-
-        @if (Context.AddEditModal.IsCreate)
-        {
-            PopulateLanguges(CurrentLanguage);
-        }
-        else
-        {
-            SetActiveLangugesFromLocal();
-        }
-    }
-
-    private void SwitchLang(string lang) { CurrentLanguage = lang; StateHasChanged(); }
-
-    private void ForceRender(EventArgs e) { Context.AddEditModal.ForceRender(); StateHasChanged(); }
-
-
-    private void SetActiveLangugesFromLocal()
-    {
-        foreach (var item in Context.AddEditModal.RequestModel.Languages.Split(','))
-        {
-            if (ActiveTranslations.Any(e => e.Code == item))
-                ActiveTranslations.FirstOrDefault(e => e.Code == item)!.Active = true;
-        }
-    }
-
-    private void PopulateLanguges(string currentLang)
-    {
-        Context.AddEditModal.RequestModel.DefaultCultureCode = currentLang;
-        Context.AddEditModal.RequestModel.Languages = currentLang;
-        @if (Context.AddEditModal.RequestModel.Locals is null) Context.AddEditModal.RequestModel.Locals = new List<LocalizedKeyword>();
-        Context.AddEditModal.RequestModel.Locals?.Add(new LocalizedKeyword { CulturCode = currentLang });
-        SetActiveLangugesFromLocal();
-    }
-
-    // [JSInvokable]
-    // private  void ToggleLanguage(ChangeEventArgs e)
-    // {
-    //     StateHasChanged();
-    // }
-
-
-    public class LanguageItem
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public bool Active { get; set; }
-    }
 }

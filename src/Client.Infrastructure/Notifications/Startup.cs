@@ -1,7 +1,7 @@
 ﻿using FSH.WebApi.Shared.Notifications;
 using MediatR;
 using MediatR.Courier;
-using MediatR.Courier.DependencyInjection;
+// using MediatR.Courier.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FSH.BlazorWebAssembly.Client.Infrastructure.Notifications;
@@ -14,8 +14,8 @@ internal static class Startup
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
         services
-            .AddMediatR(assemblies)
-            .AddCourier(assemblies)
+            .AddMediatR(c => c.RegisterServicesFromAssemblyContaining(typeof(Startup)))
+            .AddCourier(typeof(Startup).Assembly)
             .AddTransient<INotificationPublisher, NotificationPublisher>();
 
         // Register handlers for all INotificationMessages
