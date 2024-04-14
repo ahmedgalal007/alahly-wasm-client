@@ -27,46 +27,42 @@
 
         @* @for (int i = 0; i < ActiveTranslations.Count -1; i++) *@
         <MudItem xs="12" md="12">
-            <MudItem xs="12" md="3">
-                <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
-                    @nameof(context.IsOrganization)
-                </MudCheckBox>
+            <MudItem xs="12" md="12">
+                <MudItem xs="12" md="3">
+                    <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
+                        @nameof(context.IsOrganization)
+                    </MudCheckBox>
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
+                        @nameof(context.IsEvent)
+                    </MudCheckBox>
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
+                        @nameof(context.IsPerson)
+                    </MudCheckBox>
+                </MudItem>
             </MudItem>
-            <MudItem xs="12" md="3">
-                <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
-                    @nameof(context.IsEvent)
-                </MudCheckBox>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
-                    @nameof(context.IsPerson)
-                </MudCheckBox>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
-                    @nameof(context.IsPlace)
-                </MudCheckBox>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
-                    @nameof(context.IsProduct)
-                </MudCheckBox>
+            <MudItem xs="12" md="12">
+                <MudItem xs="12" md="3">
+                    <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
+                        @nameof(context.IsPlace)
+                    </MudCheckBox>
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
+                        @nameof(context.IsProduct)
+                    </MudCheckBox>
+                </MudItem>
             </MudItem>
 
-            @* <KeywordLocals TItem="AuditableLocalizedEntity" KeywordId="context.Id" Items="context.Locals" Context="local">
+            <KeywordLocals TItem="LocalizedKeywordDto" Context="local" KeywordId="context.Id" Items="context.Locals" AddLanguage="OmAddLanguage" UpdateLocals="OnUpdateLocals">
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="local.Title"></MudTextField>
+                    <MudTextField @bind-Value="local.Title" TextChanged="@(e => UpdateTextItem(local, e))" Immediate="true"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="local.Description"></MudTextField>
-                </MudItem>
-            </KeywordLocals> *@
-            <KeywordLocals TItem="LocalizedKeyword" KeywordId="context.Id" Items="context.Locals" Context="local">
-                <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="local.Title"></MudTextField>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="local.Description"></MudTextField>
+                    <MudTextField @bind-Value="local.Description" TextChanged="@(e => UpdateTextItem(local, e))"></MudTextField>
                 </MudItem>
             </KeywordLocals>
         </MudItem>
@@ -84,5 +80,52 @@
 
 @code
 {
+    // LocalizedKeyword item = new LocalizedKeyword();
+    // ICollection<LocalizedKeyword> locals = new List<LocalizedKeyword>();
 
+    void OmAddLanguage(LocalizedKeywordDto item)
+    {
+
+    }
+
+    Task OnUpdateLocals(ICollection<LocalizedKeywordDto> items)
+    {
+        // if (Context.AddEditModal.RequestModel.Locals == null)
+        //     Context.AddEditModal.RequestModel.Locals = new List<LocalizedKeyword>();
+        // foreach (var item in items)
+        // {
+        //     Context.AddEditModal.RequestModel.Locals.Add(item);
+        // }
+
+        //// Context.AddEditModal.RequestModel.Locals = items.Adapt<ICollection<LocalizedKeyword>>();
+        return Task.CompletedTask;
+    }
+
+    Task UpdateTextItem(LocalizedKeywordDto item, string value)
+    {
+        // item.Title = value;
+        AddUpdateItemToModel(Context, item);
+        return Task.CompletedTask;
+    }
+
+    private static void AddUpdateItemToModel(EntityTableContext<KeywordDto, Guid, UpdateKeywordRequest> Context, LocalizedKeywordDto item)
+    {
+        if (Context.AddEditModal.RequestModel.Locals == null)
+            Context.AddEditModal.RequestModel.Locals = new List<LocalizedKeywordDto>();
+        var loc = Context.AddEditModal.RequestModel.Locals.Where(e => e.CulturCode == item.CulturCode).FirstOrDefault();
+        if (loc == null)
+        {
+            // item.KeywordId = Context.AddEditModal.RequestModel.Id;
+            item.IsDefault = true;
+            Context.AddEditModal.RequestModel.Locals.Add(item);
+            loc = Context.AddEditModal.RequestModel.Locals.Last();
+            Context.AddEditModal.BuildAdapter();
+        }
+        else {
+            loc.Title = item.Title;
+            loc.Description = item.Description;
+            loc.Enabled = item.Enabled;
+            loc.IsDefault = item.IsDefault;
+        }
+    }
 }

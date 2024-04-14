@@ -43,7 +43,9 @@ public partial class Manage
 
         // CurrentLanguage = preferenceManager?.LanguageCode ?? "ar-EG";
         // LanguageItem.SetActiveLanguge( ActiveTranslations, preferenceManager?.LanguageCode ?? "ar-EG");
+
         LanguageManager.ActivateLanguge(preferenceManager?.LanguageCode ?? "ar-EG");
+        
     }
 
     protected override void OnInitialized() => Context = new(
@@ -53,7 +55,7 @@ public partial class Manage
         fields: new()
             {
                 new(keyword => keyword.Id, L["Id"], "Id"),
-                new(keyword => keyword.IsOrganization, L["Organization"], "Organization"),
+                new(keyword => keyword.IsOrganization, L["Organization"], "Organization"), null, new RenderFragment<KeywordDto>(dto => <div></div>)
             },
         idFunc: keyword => keyword.Id ?? Guid.NewGuid(),
         editFormInitializedFunc: OnEditFormInitialized,

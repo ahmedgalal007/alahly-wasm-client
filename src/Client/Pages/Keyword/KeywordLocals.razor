@@ -1,5 +1,5 @@
 ﻿@using FSH.WebApi.Shared.Localizations
-@typeparam TItem where TItem : AuditableLocalizedEntity, new()
+@typeparam TItem where TItem : LocalizedDto, new()
 
 <MudPaper Class="pa-16 ma-2" Elevation="3">
     <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary">
@@ -17,7 +17,6 @@
                     @foreach (var local in Items.Where(e => e.CulturCode == item.Code))
                     {
                         @ChildContent(local)
-
                     }
                 }
                 @if (Items == null)
@@ -32,20 +31,25 @@
 @code {
 
     [Parameter] public Guid KeywordId { get; set; }
-    [Parameter] public IEnumerable<TItem> Items { get; set; }
+    [Parameter] public ICollection<TItem> Items { get; set; }
+    // [Parameter] public TItem Item { get; set; }
     [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
-    [Parameter] public EventCallback<TItem>? AddLanguage { get; set; }
+    [Parameter] public EventCallback<TItem> AddLanguage { get; set; }
+    [Parameter] public EventCallback<ICollection<TItem>> UpdateLocals { get; set; }
     protected override async Task OnParametersSetAsync()
     {
-        if (Items == null)
+        if (Items == null || Items.Count == 0)
         {
             var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
             Items = new List<TItem>()
             {
                 new TItem { CulturCode = preferenceManager?.LanguageCode ?? "ar-EG", Enabled = true , IsDefault = false }
             };
+
+            await UpdateLocals.InvokeAsync(Items);
         }
 
         // return base.OnParametersSetAsync();
     }
+
 }
