@@ -1,41 +1,49 @@
 ﻿@using FSH.WebApi.Shared.Localizations
 @typeparam TItem where TItem : LocalizedDto, new()
 
-<MudPaper Class="pa-16 ma-2" Elevation="3">
+
+
+<MudPaper Class="pa-2 ma-4" Elevation="2">
     <MudTabs Elevation="4" Rounded="true" Color="@Color.Secondary">
-
-        @foreach (var item in LanguageManager.GetList(null))
+        @foreach (var item in LocalizationConstants.SupportedLanguages)
         {
+            if(!Items.Any(e => e.CulturCode == item.Code))
+            {
+                Items.Add(new TItem { CulturCode = item.Code, Enabled = false});
+            }
+            @foreach (var local in Items.Where(e => e.CulturCode == item.Code))
+                {
 
-            <MudTabPanel Text="@item.Name">
-                <MudItem xs="12" md="3">
-                    @*  <MudCheckBox Checked="@(item.Active? "checked" : "unchecked")" @onblur="ForceRender" @onchange="ForceRender">
-                @item.Name</MudCheckBox> *@
-                </MudItem>
-                @if (Items != null)
-                {
-                    @foreach (var local in Items.Where(e => e.CulturCode == item.Code))
-                    {
-                        @ChildContent(local)
-                    }
+                    <MudTabPanel OnClick="@(e => AddEditLanguageTabFunc(e,item))">
+                        <TabContent>
+                            @* <MudItem xs="12" md="3"> *@
+                            <MudCheckBox T="bool"
+                                         @bind-checked="@local.Enabled"
+                                         ValueChanged="@( e => CbxActiveChanged(e, item))"/>
+                            @item.DisplayName
+                            @* </MudItem> *@
+                        </TabContent>
+                        <ChildContent>
+                            <MudRTLProvider Class="pt-4" RightToLeft="@item.IsRTL">
+                                    @ChildContent(local);
+                            </MudRTLProvider>
+                        </ChildContent>
+                    </MudTabPanel>
                 }
-                @if (Items == null)
-                {
-                    <MudText>Locals Is Null ????</MudText>
-                }
-            </MudTabPanel>
         }
     </MudTabs>
 </MudPaper>
 
+
+
 @code {
 
-    [Parameter] public Guid KeywordId { get; set; }
+    // [Parameter] public Guid KeywordId { get; set; }
     [Parameter] public ICollection<TItem> Items { get; set; }
     // [Parameter] public TItem Item { get; set; }
-    [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
-    [Parameter] public EventCallback<TItem> AddLanguage { get; set; }
-    [Parameter] public EventCallback<ICollection<TItem>> UpdateLocals { get; set; }
+    [Parameter] public RenderFragment<TItem>? ChildContent { get; set; }
+    [Parameter] public EventCallback<TItem> OnAddLanguage { get; set; }
+    [Parameter] public EventCallback<TItem> OnUpdateLocal { get; set; }
     protected override async Task OnParametersSetAsync()
     {
         if (Items == null || Items.Count == 0)
@@ -46,10 +54,57 @@
                 new TItem { CulturCode = preferenceManager?.LanguageCode ?? "ar-EG", Enabled = true , IsDefault = false }
             };
 
-            await UpdateLocals.InvokeAsync(Items);
+            await OnUpdateLocal.InvokeAsync(Items.First());
         }
 
+        foreach (var lang in Items.Where(e => e.Enabled))
+        {
+            // LanguageManager.ActivateLanguge(lang.CulturCode);
+        }
         // return base.OnParametersSetAsync();
     }
 
+    protected virtual void AddEditLanguageTabFunc(MouseEventArgs e, LanguageCode languageItem)
+    {
+        // LanguageManager.ActivateLanguge(languageItem.Code);
+
+        // languageItem = new LanguageItem(languageItem.Code, languageItem.Name, languageItem.IsRtl, true, languageItem.Selected);
+    }
+
+    void CbxActiveChanged(bool isChecked, LanguageCode languageItem)
+    {
+
+        // _ = isChecked ?
+        //     LanguageManager.ActivateLanguge(languageItem.Code) :
+        //     LanguageManager.DeActivateLanguge(languageItem.Code);
+
+        var item = Items.FirstOrDefault(e => e.CulturCode == languageItem.Code);
+        if (item == default || item == null)
+        {
+            Items.Add(new TItem { CulturCode = languageItem.Code, Enabled = isChecked });
+        }
+        else
+        {
+            item.Enabled = isChecked;
+
+            // If new and disabled remove the item
+            if (!isChecked && (item.Id == default || item.Id == Guid.Empty))
+            {
+                Items.Remove(item);
+            }
+            // LanguageManager.ActivateLanguge(languageItem.Code);
+        }
+        OnUpdateLocal.InvokeAsync(item);
+        /*Context.AddEditModal.ForceRender();*/
+
+        // var lang = Items.SingleOrDefault(e => e.CulturCode == languageItem.Code);
+        // if (lang != null) lang.Enabled = isChecked;
+        // StateHasChanged();
+    }
+
+
+    private bool IsItemActive(string culturCode)
+    {
+        return Items.Any(e => e.CulturCode == culturCode) ? Items.Single(e => e.CulturCode == culturCode).Enabled : false;
+    }
 }

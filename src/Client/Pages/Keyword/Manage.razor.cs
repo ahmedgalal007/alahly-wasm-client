@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Syncfusion.Blazor.DropDowns;
+using static FSH.BlazorWebAssembly.Client.Pages.Personal.AuditLogs;
 
 namespace FSH.BlazorWebAssembly.Client.Pages.Keyword;
 
@@ -20,6 +21,7 @@ public partial class Manage
 {
     [Parameter]
     public string Id { get; set; } = default!; // from route
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
@@ -29,7 +31,8 @@ public partial class Manage
     [Inject]
     protected IKeywordClient KeywordClient { get; set; } = default!;
 
-    protected EntityServerTableContext<KeywordDto, Guid, UpdateKeywordRequest> Context { get; set; } = default!;
+    protected EntityServerTableContext<KeywordTableRow, Guid, UpdateKeywordRequest> Context { get; set; } = default!;
+    private PaginationResponse<KeywordTableRow> _trails = new();
     // private ICollection<LocalizedKeyword> Locals ;
     // public string CurrentLanguage { get; set; } = "ar-EG";
     // public int CurrentLanguageIndex { get; set; }
@@ -39,52 +42,53 @@ public partial class Manage
 
     protected override async Task OnParametersSetAsync()
     {
-        var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
+        // var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
 
         // CurrentLanguage = preferenceManager?.LanguageCode ?? "ar-EG";
         // LanguageItem.SetActiveLanguge( ActiveTranslations, preferenceManager?.LanguageCode ?? "ar-EG");
 
-        LanguageManager.ActivateLanguge(preferenceManager?.LanguageCode ?? "ar-EG");
-        
+        // LanguageManager.ActivateLanguge(preferenceManager?.LanguageCode ?? "ar-EG");
     }
 
     protected override void OnInitialized() => Context = new(
         entityName: L["Keyword"],
         entityNamePlural: L["Keywords"],
         entityResource: FSHResource.Keywords,
+        hasExtraActionsFunc: () => true,
         fields: new()
             {
                 new(keyword => keyword.Id, L["Id"], "Id"),
-                new(keyword => keyword.IsOrganization, L["Organization"], "Organization"), null, new RenderFragment<KeywordDto>(dto => <div></div>)
+                new(keyword => keyword.IsOrganization, L["Organization"], Template: FieldTemplate)
             },
         idFunc: keyword => keyword.Id ?? Guid.NewGuid(),
         editFormInitializedFunc: OnEditFormInitialized,
-        searchFunc: async filter => (await KeywordClient.SearchAsync(filter.Adapt<SearchKeywordRequest>()))
-        .Adapt<PaginationResponse<KeywordDto>>(),
+        // loadDataFunc: async () => _trails = (await KeywordClient.GetAsync()).Adapt<List<KeywordTableRow>>(),
+        searchFunc: async filter => _trails = (await KeywordClient.SearchAsync(filter.Adapt<SearchKeywordRequest>()))
+        .Adapt<PaginationResponse<KeywordTableRow>>(),
         createFunc: async keyword => await KeywordClient.CreateAsync(keyword.Adapt<CreateKeywordRequest>()),
         updateFunc: async (id, keyword) => await KeywordClient.UpdateAsync(id, keyword),
         deleteFunc: async id => await KeywordClient.DeleteAsync(id),
         exportAction: string.Empty);
 
-    protected async Task OnEditFormInitialized()
-        {
-        //if(Context.AddEditModal.IsCreate || Context.AddEditModal?.RequestModel?.Locals == null)
-        //{
-        //    // PopulateLanguges(CurrentLanguage);
-        //    Context.AddEditModal.RequestModel.Locals = new List<LocalizedKeyword>() { new LocalizedKeyword { CulturCode = LanguageManager.getSelectedLanguge().Code } };
-
-        //    Context.AddEditModal.RequestModel.DefaultCultureCode = LanguageManager.getSelectedLanguge().Code;
-        //}
-    }
-
-    private void SwitchLang(string lang) {
-        // CurrentLanguage = lang;
-        // CurrentLanguageIndex = LanguageItem.SelectLanguge(ActiveTranslations, lang);
-        StateHasChanged();
-    }
+    protected async Task OnEditFormInitialized(){}
 
     private void ForceRender(EventArgs e) { /*Context.AddEditModal.ForceRender();*/ StateHasChanged(); }
 
+    private void ShowBtnPress(Guid? id)
+    {
+        var trail = _trails.Data.First(f => f.Id == id);
+        trail.ShowDetails = !trail.ShowDetails;
+        foreach (var otherTrail in _trails.Data.Except(new[] { trail }))
+        {
+            otherTrail.ShowDetails = false;
+        }
+    }
+
+    public class KeywordTableRow : KeywordDto
+    {
+        public bool ShowDetails { get; set; }
+        public DateTime LocalTime { get; set; }
+    }
     //private void SetActiveLangugesFromLocal()
     //{
     //    if(Context?.AddEditModal?.RequestModel?.Languages != null)
@@ -98,7 +102,7 @@ public partial class Manage
 
     //private void PopulateLanguges(string currentLang)
     //{
-        
+
     //    Context.AddEditModal.RequestModel.Languages = currentLang;
     //    if(Context.AddEditModal?.RequestModel?.Locals is null)
     //        Context.AddEditModal.RequestModel.Locals = new List<LocalizedKeyword>();
@@ -113,7 +117,7 @@ public partial class Manage
     // }
 }
 
-public record LanguageItem(string Code, string Name, bool Active = false, bool Selected = false);
+public record LanguageItem(string Code, string Name, bool IsRtl = false, bool Active = false, bool Selected = false);
 public static class LanguageManager
 {
     // private static string _selectedlanguage;
@@ -125,7 +129,7 @@ public static class LanguageManager
             _languages = new List<LanguageItem>();
             foreach (var language in LocalizationConstants.SupportedLanguages.OrderBy(e => e.Order))
             {
-                _languages.Add(new LanguageItem(language.Code, language.DisplayName, language.Code == defaultLanguageCode));
+                _languages.Add(new LanguageItem(language.Code, language.DisplayName, language.IsRTL, language.Code == defaultLanguageCode));
             }
         }
 
