@@ -8307,7 +8307,7 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateKeywordRequest : LocalizedRequestOfGuidAndLocalizedKeywordDto
+    public partial class CreateKeywordRequest : BaseKeywordRequestOfLocalizedKeywordDto
     {
         [Newtonsoft.Json.JsonProperty("color", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Color { get; set; } = default!;
@@ -8333,7 +8333,21 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class LocalizedRequestOfGuidAndLocalizedKeywordDto
+    public partial class BaseKeywordRequestOfLocalizedKeywordDto : LocalizedRequest
+    {
+        [Newtonsoft.Json.JsonProperty("locals", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<LocalizedKeywordDto> Locals { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class LocalizedRequest : LocalizedRequestOfGuidAndLocalizedDto
+    {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class LocalizedRequestOfGuidAndLocalizedDto
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid Id { get; set; } = default!;
@@ -8345,12 +8359,12 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         public string Languages { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("locals", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<LocalizedKeywordDto> Locals { get; set; } = default!;
+        public System.Collections.Generic.ICollection<LocalizedDto> Locals { get; set; } = default!;
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateKeywordRequest : LocalizedRequestOfGuidAndLocalizedKeywordDto
+    public partial class UpdateKeywordRequest : BaseKeywordRequestOfLocalizedKeywordDto
     {
         [Newtonsoft.Json.JsonProperty("color", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Color { get; set; } = default!;
