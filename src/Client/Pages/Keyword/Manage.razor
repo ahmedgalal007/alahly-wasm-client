@@ -18,67 +18,78 @@
     </ExtraActions>
 
     <EditFormContent>
-        <MudGrid>
+
             @if (!Context.AddEditModal.IsCreate)
             {
+                
                 <MudItem xs="12" md="12">
-                    <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Keyword Id"]" />
+                @* <MudRTLProvider RightToLeft="true"> *@
+                    <MudTextField  Typo="Typo.body1" Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Keyword Id"]" Variant="Variant.Filled" />
+                    @* </MudRTLProvider> *@
                 </MudItem>
+                
             }
-            <MudExpansionPanels>
-                <MudExpansionPanel Text="Panel One" MaxHeight="150">
-                    <MudItem xs="12" md="3">
-                        <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
-                            @nameof(context.IsOrganization)
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12" md="3">
-                        <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
-                            @nameof(context.IsEvent)
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12" md="3">
-                        <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
-                            @nameof(context.IsPerson)
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12" md="3">
-                        <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
-                            @nameof(context.IsPlace)
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12" md="3">
-                        <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
-                            @nameof(context.IsProduct)
-                        </MudCheckBox>
-                    </MudItem>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Panel Two" MaxHeight="150">
-                    <MudItem xs="12" md="12" Class="me-4">
+
+            <MudItem xs="12" md="12">
+                <MudExpansionPanels Class="mb-4">
+                    <MudExpansionPanel Text="Specifications" Class="me-0" IsInitiallyExpanded="true">
+                        <MudGrid Class="pa-0" Style="width:100%">
+                            <MudItem xs="12" md="3">
+                                <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
+                                    @nameof(context.IsOrganization)
+                                </MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" md="3">
+                                <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
+                                    @nameof(context.IsEvent)
+                                </MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" md="3">
+                                <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
+                                    @nameof(context.IsPerson)
+                                </MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" md="3">
+                                <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
+                                    @nameof(context.IsPlace)
+                                </MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" md="3">
+                                <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
+                                    @nameof(context.IsProduct)
+                                </MudCheckBox>
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+                @* <MudGrid Class="pa-0 ma-0" Style="width:100%">
+                    <MudItem xs="12" md="12" Class="pa-0"> *@
                         <EditFormContentLocals TItem="LocalizedKeywordDto" Context="local" Items="context.Locals" OnAddLanguage="OnAddLanguage" OnUpdateLocal="OnUpdateLocals">
-                            <MudItem xs="12" Class="ma-4">
-                                <MudTextField Label="@L["Title"]"
-                                              For="@(() => local.Title)"
-                                              Disabled="@(local.Enabled? false : true)"
-                                              @bind-Value="local.Title" Variant="Variant.Outlined"
-                                              TextChanged="@(e => UpdateTextItem(local, e))"
-                                              Immediate="true" Counter="25" MaxLength="25" />
-                            </MudItem>
-                            <MudItem xs="12" Class="ma-4">
-                                @* <MudTextField Label="@L["Description"]" @bind-Value="local.Description" TextChanged="@(e => UpdateTextItem(local, e))"></MudTextField> *@
-                                <MudTextField @ref="multilineReference" T="string" Label="@L["Description"]" Lines="3"
-                                              For="@(() => local.Description)"
-                                              Disabled="@(local.Enabled? false : true)"
-                                              @bind-Value="local.Description" Variant="Variant.Outlined"
-                                              TextChanged="@(e => UpdateTextItem(local, e))"
-                                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Api" OnAdornmentClick="@(() => multilineReference.SelectRangeAsync(5, 10))" />
-                            </MudItem>
+                            <MudGrid Class="pa-0 ma-0" Style="width:100%">
+                                <MudItem xs="12" Class="ma-4">
+                                    <MudTextField Label="@L["Title"]"
+                                                  InputType="InputType.Text"
+                                                  For="@(() => local.Title)"
+                                                  Disabled="@(local.Enabled? false : true)"
+                                                  @bind-Value="local.Title" Variant="Variant.Outlined"
+                                                  TextChanged="@(e => UpdateTextItem(local, e))"
+                                                  Immediate="true" Counter="25" MaxLength="25" />
+                                </MudItem>
+                                <MudItem xs="12" Class="ma-4">
+                                    @* <MudTextField Label="@L["Description"]" @bind-Value="local.Description" TextChanged="@(e => UpdateTextItem(local, e))"></MudTextField> *@
+                                    <MudTextField @ref="multilineReference" T="string" Label="@L["Description"]" Lines="3"
+                                                  InputType="InputType.Text"
+                                                  For="@(() => local.Description)"
+                                                  Disabled="@(local.Enabled? false : true)"
+                                                  @bind-Value="local.Description" Variant="Variant.Outlined"
+                                                  TextChanged="@(e => UpdateTextItem(local, e))"
+                                                  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Api" OnAdornmentClick="@(() => multilineReference.SelectRangeAsync(5, 10))" />
+                                </MudItem>
+                            </MudGrid>
                         </EditFormContentLocals>
                     </MudItem>
-                </MudExpansionPanel>
-            </MudExpansionPanels>
-        </MudGrid>
-        
+               @*  </MudGrid>
+            </MudItem> *@
     </EditFormContent>
     <ChildRowContent>
         @if (context.ShowDetails)
@@ -124,6 +135,7 @@
             <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface"> @L["Culture"] :  @keyword.Locals?.FirstOrDefault()?.CulturCode</MudChip>
         </MudItem>
     };
+
     // LocalizedKeyword item = new LocalizedKeyword();
     // ICollection<LocalizedKeyword> locals = new List<LocalizedKeyword>();
 

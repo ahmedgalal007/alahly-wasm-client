@@ -70,3 +70,8 @@
 .fsh-nav-child {
     padding-left: 10px !important;
 }
+
+[dir="rtl"] .fsh-nav-child {
+    padding-left: 0px !important;
+    padding-right: 10px !important;
+}

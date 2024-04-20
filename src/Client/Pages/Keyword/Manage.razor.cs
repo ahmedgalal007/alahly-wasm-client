@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using FSH.BlazorWebAssembly.Client.Components.EntityTable;
+using FSH.BlazorWebAssembly.Client.Components.Localization;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
@@ -48,10 +49,10 @@ public partial class Manage
 
     protected override async Task OnParametersSetAsync()
     {
-        // var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
+        var preferenceManager = await ClientPreferences.GetPreference() as ClientPreference;
 
         // CurrentLanguage = preferenceManager?.LanguageCode ?? "ar-EG";
-        // LanguageItem.SetActiveLanguge( ActiveTranslations, preferenceManager?.LanguageCode ?? "ar-EG");
+        LanguageManager.SelectLanguge(preferenceManager?.LanguageCode ?? "ar-EG");
 
         // LanguageManager.ActivateLanguge(preferenceManager?.LanguageCode ?? "ar-EG");
     }
