@@ -1,16 +1,16 @@
-﻿@page "/keyword/manage"
+﻿@page "/categories"
 @using System.Collections.ObjectModel;
 @using FSH.BlazorWebAssembly.Client.Components.EntityTable;
 
-@attribute [MustHavePermission(FSHAction.View, FSHResource.Keywords)]
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Categories)]
 
-@inject IStringLocalizer<Manage> L
+@inject IStringLocalizer<Categories> L
 @*@inject IBrandsClient BrandsClient*@
 @* @inject IKeywordClient KeywordClient *@
 
-<FshTitle Title="@L["Keywords"]" Description="@L["Manage Keywords."]" />
+<FshTitle Title="@L["Categories"]" Description="@L["Manage Categories."]" />
 
-<EntityTable TEntity="KeywordTableRow" TId="Guid" TRequest="UpdateKeywordRequest" Context="@Context">
+<EntityTable TEntity="CategoryTableRow" TId="Guid" TRequest="UpdateCategoryRequest" Context="@Context">
 
     <ExtraActions>
         <MudButton Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary"
@@ -29,47 +29,14 @@
             </MudItem>
 
         }
-
-        <MudItem xs="12" md="12">
-            <MudExpansionPanels Class="mb-4">
-                <MudExpansionPanel Text="Specifications" Class="me-0" IsInitiallyExpanded="true">
-                    <MudGrid Class="pa-0" Style="width:100%">
-                        <MudItem xs="12" md="3">
-                            <MudCheckBox @bind-Checked="context.IsOrganization" @onblur="ForceRender" @onchange="ForceRender">
-                                @nameof(context.IsOrganization)
-                            </MudCheckBox>
-                        </MudItem>
-                        <MudItem xs="12" md="3">
-                            <MudCheckBox @bind-Checked="context.IsEvent" @onblur="ForceRender" @onchange="ForceRender">
-                                @nameof(context.IsEvent)
-                            </MudCheckBox>
-                        </MudItem>
-                        <MudItem xs="12" md="3">
-                            <MudCheckBox @bind-Checked="context.IsPerson" @onblur="ForceRender" @onchange="ForceRender">
-                                @nameof(context.IsPerson)
-                            </MudCheckBox>
-                        </MudItem>
-                        <MudItem xs="12" md="3">
-                            <MudCheckBox @bind-Checked="context.IsPlace" @onblur="ForceRender" @onchange="ForceRender">
-                                @nameof(context.IsPlace)
-                            </MudCheckBox>
-                        </MudItem>
-                        <MudItem xs="12" md="3">
-                            <MudCheckBox @bind-Checked="context.IsProduct" @onblur="ForceRender" @onchange="ForceRender">
-                                @nameof(context.IsProduct)
-                            </MudCheckBox>
-                        </MudItem>
-                    </MudGrid>
-                </MudExpansionPanel>
-            </MudExpansionPanels>
-            <EditFormContentLocals TItem="LocalizedKeywordDto" Context="local" Items="context.Locals" OnAddLanguage="OnAddLanguage" OnUpdateLocal="OnUpdateLocals">
+        <EditFormContentLocals TItem="LocalizedCategoryDto" Context="local" Items="context.Locals" OnAddLanguage="OnAddLanguage" OnUpdateLocal="OnUpdateLocals">
                 <MudGrid Class="pa-0 ma-0" Style="width:100%">
                     <MudItem xs="12" Class="ma-4">
                         <MudTextField Label="@L["Title"]"
                                       InputType="InputType.Text"
-                                      For="@(() => local.Title)"
+                                      For="@(() => local.Name)"
                                       Disabled="@(local.Enabled? false : true)"
-                                      @bind-Value="local.Title" Variant="Variant.Outlined"
+                                      @bind-Value="local.Name" Variant="Variant.Outlined"
                                       TextChanged="@(e => UpdateTextItem(local, e))"
                                       Immediate="true" Counter="25" MaxLength="25" />
                     </MudItem>
@@ -85,7 +52,6 @@
                     </MudItem>
                 </MudGrid>
             </EditFormContentLocals>
-        </MudItem>
     </EditFormContent>
     <ChildRowContent>
         @if (context.ShowDetails)
@@ -122,10 +88,10 @@
 @code
 {
     private MudTextField<string>? multilineReference;
-    private RenderFragment<KeywordTableRow>? FieldTemplate => keyword => __builder =>
+    private RenderFragment<CategoryTableRow>? FieldTemplate => keyword => __builder =>
     {
         <MudItem>
-            <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface"> @L["Title"] : @keyword.Locals?.FirstOrDefault()?.Title</MudChip>
+            <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface"> @L["Title"] : @keyword.Locals?.FirstOrDefault()?.Name</MudChip>
         </MudItem>
         <MudItem>
             <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface"> @L["Culture"] :  @keyword.Locals?.FirstOrDefault()?.CulturCode</MudChip>

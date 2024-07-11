@@ -16,9 +16,9 @@ using MudBlazor;
 using Syncfusion.Blazor.DropDowns;
 using static FSH.BlazorWebAssembly.Client.Pages.Personal.AuditLogs;
 
-namespace FSH.BlazorWebAssembly.Client.Pages.Keyword;
+namespace FSH.BlazorWebAssembly.Client.Pages.Article;
 
-public partial class Manage
+public partial class Categories
 {
     [Parameter]
     public string Id { get; set; } = default!; // from route
@@ -30,10 +30,10 @@ public partial class Manage
     [Inject]
     protected IRolesClient RolesClient { get; set; } = default!;
     [Inject]
-    protected IKeywordClient KeywordClient { get; set; } = default!;
+    protected ICategoriesClient CategoriesClient { get; set; } = default!;
 
-    protected EntityServerTableContext<KeywordTableRow, Guid, UpdateKeywordRequest> Context { get; set; } = default!;
-    private PaginationResponse<KeywordTableRow> _trails = new();
+    protected EntityServerTableContext<CategoryTableRow, Guid, UpdateCategoryRequest> Context { get; set; } = default!;
+    private PaginationResponse<CategoryTableRow> _trails = new();
     // private ICollection<LocalizedKeyword> Locals ;
     // public string CurrentLanguage { get; set; } = "ar-EG";
     // public int CurrentLanguageIndex { get; set; }
@@ -41,8 +41,8 @@ public partial class Manage
     // [Parameter] public Dictionary<string, bool> ActiveTranslations { get; set; } = new Dictionary<string, bool>();
     // public List<LanguageItem> ActiveTranslations { get; set; } = LanguageItem.GetList(null);
 
-    static Manage() =>
-        TypeAdapterConfig<KeywordDto, KeywordTableRow>.NewConfig().Map(
+    static Categories() =>
+        TypeAdapterConfig<CategoryDto, CategoryTableRow>.NewConfig().Map(
             dest => dest.LocalTime,
             src => DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc).ToLocalTime());
 
@@ -63,17 +63,17 @@ public partial class Manage
         hasExtraActionsFunc: () => true,
         fields: new()
             {
-                new(keyword => keyword.Id, L["Id"], "Id"),
-                new(keyword => keyword.IsOrganization, L["Organization"], Template: FieldTemplate)
+                new(category => category.Id, L["Id"], "Id"),
+                new(category => category.Locals.FirstOrDefault(e => e.IsDefault).Name, L["Category:Name"], Template: FieldTemplate)
             },
-        idFunc: keyword => keyword.Id ?? Guid.NewGuid(),
+        idFunc: category => category.Id ?? Guid.NewGuid(),
         editFormInitializedFunc: OnEditFormInitialized,
         // loadDataFunc: async () => _trails = (await KeywordClient.GetAsync()).Adapt<List<KeywordTableRow>>(),
-        searchFunc: async filter => _trails = (await KeywordClient.SearchAsync(filter.Adapt<SearchKeywordRequest>()))
-        .Adapt<PaginationResponse<KeywordTableRow>>(),
-        createFunc: async keyword => await KeywordClient.CreateAsync(keyword.Adapt<CreateKeywordRequest>()),
-        updateFunc: async (id, keyword) => await KeywordClient.UpdateAsync(id, keyword),
-        deleteFunc: async id => await KeywordClient.DeleteAsync(id),
+        searchFunc: async filter => _trails = (await CategoriesClient.SearchAsync(filter.Adapt<SearchCategoriesRequest>()))
+        .Adapt<PaginationResponse<CategoryTableRow>>(),
+        createFunc: async category => await CategoriesClient.CreateAsync(category.Adapt<CreateCategoryRequest>()),
+        updateFunc: async (id, category) => await CategoriesClient.UpdateAsync(id, category),
+        deleteFunc: async id => await CategoriesClient.DeleteAsync(id),
         exportAction: string.Empty);
 
     protected async Task OnEditFormInitialized(){}
@@ -90,19 +90,19 @@ public partial class Manage
         }
     }
 
-    void OnAddLanguage(LocalizedKeywordDto item)
+    void OnAddLanguage(LocalizedCategoryDto item)
     {
 
     }
 
-    Task OnUpdateLocals(LocalizedKeywordDto item)
+    Task OnUpdateLocals(LocalizedCategoryDto item)
     {
         SyncWithContextLocals(Context, item);
         StateHasChanged();
         return Task.CompletedTask;
     }
 
-    private Task UpdateTextItem(LocalizedKeywordDto item, string value)
+    private Task UpdateTextItem(LocalizedCategoryDto item, string value)
     {
         // item.Title = value;
         SyncWithContextLocals(Context, item);
@@ -110,12 +110,12 @@ public partial class Manage
         return Task.CompletedTask;
     }
 
-    private static void SyncWithContextLocals(EntityTableContext<KeywordTableRow, Guid, UpdateKeywordRequest> Context, LocalizedKeywordDto item)
+    private static void SyncWithContextLocals(EntityTableContext<CategoryTableRow, Guid, UpdateCategoryRequest> Context, LocalizedCategoryDto item)
     {
-        AddEditModelLocalizer<KeywordTableRow, LocalizedKeywordDto, Guid, UpdateKeywordRequest>.SyncWithContextLocals(Context, item);
+        AddEditModelLocalizer<CategoryTableRow, LocalizedCategoryDto, Guid, UpdateCategoryRequest>.SyncWithContextLocals(Context, item);
     }
 
-    public class KeywordTableRow : KeywordDto
+    public class CategoryTableRow : CategoryDto
     {
         public bool ShowDetails { get; set; }
         public DateTime LocalTime { get; set; }
